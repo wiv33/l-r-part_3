@@ -1,0 +1,19 @@
+GET localhost:8080/api/images
+
+###
+
+POST localhost:8080/api/images
+Content-Type: application/json
+
+[
+  {
+    "id": "11",
+    "name": "foo"
+  },
+  {
+    "id": "20",
+    "name": "joo"
+  }
+]
+
+###
