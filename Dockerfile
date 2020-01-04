@@ -1,5 +1,8 @@
-FROM openjdk:11
+FROM hirokimatsumoto/alpine-openjdk-11
 
-ADD build/libs/learning-reactive-file-0.0.1-SNAPSHOT.jar app.jar
+MAINTAINER PS
 
-ENTRYPOINT ["java","-jar","/app.jar"]
+ADD build/libs/*.jar app.jar
+
+#ENTRYPOINT ["java","-jar","/app.jar"]
+CMD ["java","-jar","/app.jar"]

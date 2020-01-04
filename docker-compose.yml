@@ -1,15 +1,15 @@
-version: '2'
+version: '3.0'
 
 services:
 
-    api:
-        build: .
-        ports:
-            - 8080:8080
-        depends_on:
-            - mongo
+  web:
+    build: .
+    ports:
+      - 5000:8080
+    depends_on:
+      - mongo_user
 
-    mongo:
-        image: mongo
-        ports:
-            - 27017:27017
+  mongo_user:
+    image: mongo
+    ports:
+    - 27017:27017

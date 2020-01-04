@@ -1,4 +1,4 @@
-GET localhost:8080/api/images
+GET localhost:80/api/images
 
 ###
 

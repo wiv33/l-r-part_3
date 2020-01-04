@@ -1,5 +1,13 @@
 logging:
   level:
-    io:
-      netty: debug
+#    io:
+#      netty: debug
     reactor: debug
+
+spring:
+
+  data:
+    mongodb:
+      host: mongo_user
+      port: 27017
+      database: webflux_mongo_demo
