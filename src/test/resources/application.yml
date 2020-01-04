@@ -3,3 +3,11 @@ logging:
     #    io:
     #      netty: debug
     reactor: debug
+
+spring:
+
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: webflux_mongo_demo

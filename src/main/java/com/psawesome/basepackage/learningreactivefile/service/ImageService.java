@@ -41,7 +41,7 @@ public class ImageService {
     }
 
     public Mono<Resource> findOneImage(String filename) {
-        return Mono.fromSupplier(() -> resourceLoader.getResource("file:" + UPLOAD_ROOT + "/" + filename));
+        return Mono.fromSupplier(() -> resourceLoader.getResource("file:" + UPLOAD_ROOT + "/" + filename)).log();
     }
 
     public Mono<Void> createImage(Flux<FilePart> files) {
@@ -90,10 +90,10 @@ public class ImageService {
 
             Files.createDirectory(Paths.get(UPLOAD_ROOT));
 
-            FileCopyUtils.copy("Test file", new FileWriter(UPLOAD_ROOT + "/lsbc.jpg"));
+            FileCopyUtils.copy("Test file", new FileWriter(UPLOAD_ROOT + "/docker-logo.png"));
 
-            FileCopyUtils.copy("Test file2", new FileWriter(UPLOAD_ROOT + "/lsb2ec.jpg"));
-            FileCopyUtils.copy("Test file3", new FileWriter(UPLOAD_ROOT + "/background.jpg"));
+            FileCopyUtils.copy("Test file2", new FileWriter(UPLOAD_ROOT + "/l-r-Flux.png"));
+            FileCopyUtils.copy("Test file3", new FileWriter(UPLOAD_ROOT + "/l-r-Mono.png"));
         };
     }
 }

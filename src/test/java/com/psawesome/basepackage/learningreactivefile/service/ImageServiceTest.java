@@ -2,27 +2,31 @@ package com.psawesome.basepackage.learningreactivefile.service;
 
 import com.psawesome.basepackage.learningreactivefile.dto.Image;
 import com.psawesome.basepackage.learningreactivefile.repo.ImageRepository;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
-import org.springframework.test.context.event.annotation.BeforeTestClass;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.util.FileSystemUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.time.Duration;
-import java.util.Collections;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
+import static com.psawesome.basepackage.learningreactivefile.service.ImageService.UPLOAD_ROOT;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -46,13 +50,24 @@ class ImageServiceTest {
     }
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws IOException {
         System.out.println("ImageServiceTest.setUp");
         operations.dropCollection(Image.class);
 
-        operations.insert(new Image("1", "docker-logo.png"));
-        operations.insert(new Image("2", "l-r-Flux.png"));
-        operations.insert(new Image("3", "l-r-Mono.png"));
+        String fileOne = "docker-logo.png";
+        String fileTwo = "l-r-Flux.png";
+        String fileTree = "l-r-Mono.png";
+
+        operations.insert(new Image("1", fileOne));
+        operations.insert(new Image("2", fileTwo));
+        operations.insert(new Image("3", fileTree));
+
+        FileSystemUtils.deleteRecursively(new File(UPLOAD_ROOT));
+
+        Files.createDirectory(Paths.get(UPLOAD_ROOT));
+        FileCopyUtils.copy("Test file", new FileWriter(UPLOAD_ROOT + "/" + fileOne));
+        FileCopyUtils.copy("Test file2", new FileWriter(UPLOAD_ROOT + "/" + fileTwo));
+        FileCopyUtils.copy("Test file3", new FileWriter(UPLOAD_ROOT + "/" + fileTree));
     }
 
     @AfterEach
@@ -66,12 +81,12 @@ class ImageServiceTest {
 
         Flux<Image> listFlux = imageService.findAllImages()
             .log();
-        Flux<String> stringFlux = listFlux.flatMap(image -> Mono.just(image.getId() + "," + image.getName()));
+        Flux<String> stringFlux = listFlux.flatMap(image -> Mono.just(image.getName()));
 
         assertAll(
-            () -> assertTrue(stringFlux.any(string -> string.equals("1,docker-logo.png")).block()),
-            () -> assertTrue(stringFlux.any(string -> string.equals("2,l-r-Flux.png")).block()),
-            () -> assertTrue(stringFlux.any(string -> string.equals("3,l-r-Mono.png")).block())
+            () -> assertTrue(stringFlux.any(string -> string.equals("docker-logo.png")).block()),
+            () -> assertTrue(stringFlux.any(string -> string.equals("l-r-Flux.png")).block()),
+            () -> assertTrue(stringFlux.any(string -> string.equals("l-r-Mono.png")).block())
         );
     }
 
@@ -88,7 +103,11 @@ class ImageServiceTest {
 
         // Given
         Mono<Resource> oneImage = imageService.findOneImage("l-r-Mono.png");
-        assertEquals("l-r-Mono.png", oneImage.block().getFilename());
+
+        assertAll(
+            () -> assertEquals("l-r-Mono.png", oneImage.block().getFilename()),
+            () -> assertTrue(oneImage.block().exists())
+        );
 
         // When
         imageService.deleteImage("l-r-Mono.png").block();
