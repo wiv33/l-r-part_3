@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -85,9 +86,9 @@ class ImageServiceTest {
         Flux<String> stringFlux = listFlux.flatMap(image -> Mono.just(image.getName()));
 
         assertAll(
-            () -> assertTrue(stringFlux.any(string -> string.equals("docker-logo.png")).block(Duration.ofSeconds(3))),
-            () -> assertTrue(stringFlux.any(string -> string.equals("l-r-Flux.png")).block(Duration.ofSeconds(3))),
-            () -> assertTrue(stringFlux.any(string -> string.equals("l-r-Mono.png")).block(Duration.ofSeconds(3)))
+            () -> assertTrue(stringFlux.any(string -> string.equals("docker-logo.png")).block(Duration.ofSeconds(10))),
+            () -> assertTrue(stringFlux.any(string -> string.equals("l-r-Flux.png")).block(Duration.ofSeconds(10))),
+            () -> assertTrue(stringFlux.any(string -> string.equals("l-r-Mono.png")).block(Duration.ofSeconds(10)))
         );
     }
 
@@ -112,7 +113,7 @@ class ImageServiceTest {
         );
 
         // When
-        imageService.deleteImage("l-r-Mono.png");
+        imageService.deleteImage("l-r-Mono.png").block(Duration.ofSeconds(10));
 
         // Then
         Mono<Resource> resultImage = imageService.findOneImage("l-r-Mono.png");

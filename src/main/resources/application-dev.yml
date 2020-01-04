@@ -1,0 +1,13 @@
+logging:
+  level:
+    #    io:
+    #      netty: debug
+    reactor: debug
+
+
+spring:
+
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
