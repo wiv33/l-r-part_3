@@ -25,6 +25,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Duration;
 
 import static com.psawesome.basepackage.learningreactivefile.service.ImageService.UPLOAD_ROOT;
 import static org.junit.jupiter.api.Assertions.*;
@@ -84,16 +85,16 @@ class ImageServiceTest {
         Flux<String> stringFlux = listFlux.flatMap(image -> Mono.just(image.getName()));
 
         assertAll(
-            () -> assertTrue(stringFlux.any(string -> string.equals("docker-logo.png")).block()),
-            () -> assertTrue(stringFlux.any(string -> string.equals("l-r-Flux.png")).block()),
-            () -> assertTrue(stringFlux.any(string -> string.equals("l-r-Mono.png")).block())
+            () -> assertTrue(stringFlux.any(string -> string.equals("docker-logo.png")).block(Duration.ofSeconds(3))),
+            () -> assertTrue(stringFlux.any(string -> string.equals("l-r-Flux.png")).block(Duration.ofSeconds(3))),
+            () -> assertTrue(stringFlux.any(string -> string.equals("l-r-Mono.png")).block(Duration.ofSeconds(3)))
         );
     }
 
     @Test
     public void findOneImage() {
         Mono<Resource> imageResource = imageService.findOneImage("docker-logo.png");
-        Resource block = imageResource.log().block();
+        Resource block = imageResource.log().block(Duration.ofSeconds(3));
 
         assertEquals("docker-logo.png", block.getFilename());
     }
@@ -104,18 +105,20 @@ class ImageServiceTest {
         // Given
         Mono<Resource> oneImage = imageService.findOneImage("l-r-Mono.png");
 
+        Resource block = oneImage.block(Duration.ofSeconds(2));
         assertAll(
-            () -> assertEquals("l-r-Mono.png", oneImage.block().getFilename()),
-            () -> assertTrue(oneImage.block().exists())
+            () -> assertEquals("l-r-Mono.png", block.getFilename()),
+            () -> assertTrue(block.exists())
         );
 
         // When
-        imageService.deleteImage("l-r-Mono.png").block();
+        imageService.deleteImage("l-r-Mono.png");
 
         // Then
         Mono<Resource> resultImage = imageService.findOneImage("l-r-Mono.png");
-        System.out.println("resultImage = " + resultImage.block().getFile().getPath());
-        assertFalse(resultImage.block().exists());
+        Resource block1 = resultImage.block(Duration.ofSeconds(7));
+        System.out.println("resultImage = " + block1.getFile().getPath());
+        assertFalse(block1.exists());
     }
 
 
