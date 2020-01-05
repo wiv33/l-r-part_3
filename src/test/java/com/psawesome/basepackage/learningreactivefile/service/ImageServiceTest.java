@@ -1,10 +1,8 @@
-/*
 package com.psawesome.basepackage.learningreactivefile.service;
 
-import com.psawesome.basepackage.learningreactivefile.employee.Image;
+import com.psawesome.basepackage.learningreactivefile.dto.Image;
 import com.psawesome.basepackage.learningreactivefile.repo.ImageRepository;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +11,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.FileSystemUtils;
 import reactor.core.publisher.Flux;
@@ -25,18 +23,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.List;
 
 import static com.psawesome.basepackage.learningreactivefile.service.ImageService.UPLOAD_ROOT;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
-*/
 /**
  * package: com.psawesome.basepackage.learningreactivefile.service
  * author: PS
  * DATE: 2020-01-04 토요일 20:17
- *//*
+ */
 
-@ExtendWith(SpringExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DataMongoTest
 class ImageServiceTest {
@@ -57,9 +58,9 @@ class ImageServiceTest {
         System.out.println("ImageServiceTest.setUp");
         operations.dropCollection(Image.class);
 
-        String fileOne = "docker-logo.png";
-        String fileTwo = "l-r-Flux.png";
-        String fileTree = "l-r-Mono.png";
+        String fileOne = "docker-logo.jpeg";
+        String fileTwo = "l-r-Flux.jpg";
+        String fileTree = "l-r-Mono.jpeg";
 
         operations.insert(new Image("1", fileOne));
         operations.insert(new Image("2", fileTwo));
@@ -88,6 +89,7 @@ class ImageServiceTest {
         Flux<String> stringFlux = listFlux.flatMap(image -> Mono.just(image.getName()));
 
         assertAll(
+            () -> assertThat(listFlux.toIterable()).hasSize(2),
             () -> assertTrue(stringFlux.any(string -> string.equals("docker-logo.png")).block(Duration.ofSeconds(10))),
             () -> assertTrue(stringFlux.any(string -> string.equals("l-r-Flux.png")).block(Duration.ofSeconds(10))),
             () -> assertTrue(stringFlux.any(string -> string.equals("l-r-Mono.png")).block(Duration.ofSeconds(10)))
@@ -97,10 +99,10 @@ class ImageServiceTest {
     @Test
     @Order(2)
     public void findOneImage() {
-        Mono<Resource> imageResource = imageService.findOneImage("docker-logo.png");
+        Mono<Resource> imageResource = imageService.findOneImage("docker-logo.jpeg");
         Resource block = imageResource.log().block(Duration.ofSeconds(3));
 
-        assertEquals("docker-logo.png", block.getFilename());
+        assertEquals("docker-logo.jpeg", block.getFilename());
     }
 
     @Test
@@ -108,24 +110,42 @@ class ImageServiceTest {
     public void deleteImage() throws IOException {
 
         // Given
-        Mono<Resource> oneImage = imageService.findOneImage("l-r-Mono.png");
+        Mono<Resource> oneImage = imageService.findOneImage("l-r-Mono.jpeg");
 
         Resource block = oneImage.block(Duration.ofSeconds(2));
         assertAll(
-            () -> assertEquals("l-r-Mono.png", block.getFilename()),
+            () -> assertEquals("l-r-Mono.jpeg", block.getFilename()),
             () -> assertTrue(block.exists())
         );
 
         // When
-        imageService.deleteImage("l-r-Mono.png").block(Duration.ofSeconds(10));
+        imageService.deleteImage("l-r-Mono.jpeg").block(Duration.ofSeconds(10));
 
         // Then
-        Mono<Resource> resultImage = imageService.findOneImage("l-r-Mono.png");
+        Mono<Resource> resultImage = imageService.findOneImage("l-r-Mono.jpeg");
         Resource block1 = resultImage.block(Duration.ofSeconds(7));
         System.out.println("resultImage = " + block1.getFile().getPath());
         assertFalse(block1.exists());
     }
 
+    @Test
+    void createImages() {
+        Image alphaImage = new Image("1", "alpha.jpg");
+        Image bravoImage = new Image("2", "bravo.jpg");
+        FilePart file1 = mock(FilePart.class);
+        given(file1.filename()).willReturn(alphaImage.getName());
+        given(file1.transferTo((File) any())).willReturn(Mono.empty());
+        FilePart file2 = mock(FilePart.class);
+        given(file2.filename()).willReturn(bravoImage.getName());
+        given(file2.transferTo((File) any())).willReturn(Mono.empty());
+
+        List<Image> images = imageService
+            .createImage(Flux.just(file1, file2))
+            .then(imageService.findAllImages().collectList())
+            .block(Duration.ofSeconds(30));
+
+        assertThat(images).hasSize(5);
+    }
 
     @Configuration
     @EnableReactiveMongoRepositories(basePackageClasses = ImageRepository.class)
@@ -136,4 +156,4 @@ class ImageServiceTest {
             return new ImageService(resourceLoader, imageRepository);
         }
     }
-}*/
+}
