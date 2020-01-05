@@ -1,6 +1,6 @@
-package com.psawesome.basepackage.learningreactivefile.repo;
+package com.psawesome.basepackage.learningreactivefile.employee.repo;
 
-import com.psawesome.basepackage.learningreactivefile.dto.Employee;
+import com.psawesome.basepackage.learningreactivefile.employee.dto.Employee;
 import org.springframework.data.repository.query.ReactiveQueryByExampleExecutor;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 

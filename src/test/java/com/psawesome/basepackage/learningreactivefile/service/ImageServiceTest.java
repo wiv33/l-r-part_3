@@ -1,16 +1,14 @@
+/*
 package com.psawesome.basepackage.learningreactivefile.service;
 
-import com.psawesome.basepackage.learningreactivefile.dto.Image;
+import com.psawesome.basepackage.learningreactivefile.employee.Image;
 import com.psawesome.basepackage.learningreactivefile.repo.ImageRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -31,12 +29,15 @@ import java.time.Duration;
 import static com.psawesome.basepackage.learningreactivefile.service.ImageService.UPLOAD_ROOT;
 import static org.junit.jupiter.api.Assertions.*;
 
+*/
 /**
  * package: com.psawesome.basepackage.learningreactivefile.service
  * author: PS
  * DATE: 2020-01-04 토요일 20:17
- */
+ *//*
+
 @ExtendWith(SpringExtension.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DataMongoTest
 class ImageServiceTest {
 
@@ -79,6 +80,7 @@ class ImageServiceTest {
     }
 
     @Test
+    @Order(1)
     public void findAllImages() {
 
         Flux<Image> listFlux = imageService.findAllImages()
@@ -93,6 +95,7 @@ class ImageServiceTest {
     }
 
     @Test
+    @Order(2)
     public void findOneImage() {
         Mono<Resource> imageResource = imageService.findOneImage("docker-logo.png");
         Resource block = imageResource.log().block(Duration.ofSeconds(3));
@@ -101,6 +104,7 @@ class ImageServiceTest {
     }
 
     @Test
+    @Order(3)
     public void deleteImage() throws IOException {
 
         // Given
@@ -132,4 +136,4 @@ class ImageServiceTest {
             return new ImageService(resourceLoader, imageRepository);
         }
     }
-}
+}*/
