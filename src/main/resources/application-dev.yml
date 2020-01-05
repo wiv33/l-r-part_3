@@ -2,7 +2,15 @@ logging:
   level:
     #    io:
     #      netty: debug
-    reactor: debug
+    org:
+      springframework.data: trace
+    com:
+      psawesome:
+        basepackage:
+          learningreactivefile: debug
+    reactor:
+      core: trace
+      util: trace
 
 
 spring:

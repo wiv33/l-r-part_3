@@ -24,11 +24,11 @@ import java.io.IOException;
 public class HomeController {
 
     public static final String BASE_PATH = "/images";
-    public static final String FILENAME = "${filename:.+}";
+    public static final String FILENAME = "{filename:.+}";
 
     private final ImageService imageService;
 
-    @GetMapping(value = BASE_PATH + "/" + FILENAME + "/raw", produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(value = BASE_PATH + "/" + FILENAME + "/raw", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     @ResponseBody
     public Mono<ResponseEntity<?>> oneRawImage(@PathVariable String filename) {
         return imageService.findOneImage(filename)

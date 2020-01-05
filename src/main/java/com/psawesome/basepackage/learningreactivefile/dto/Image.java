@@ -1,8 +1,9 @@
 package com.psawesome.basepackage.learningreactivefile.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * package: com.psawesome.basepackage.learningreactivefile.dto
@@ -10,11 +11,12 @@ import lombok.NoArgsConstructor;
  * DATE: 2020-01-02 목요일 21:58
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Document
 public class Image {
 
-    private String id;
-    private String name;
+    @Id
+    private final String id;
+    private final String name;
 
 }

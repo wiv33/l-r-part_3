@@ -19,9 +19,9 @@ public class InitData {
         return args -> {
             operations.dropCollection(Image.class);
 
-            operations.insert(new Image("1", "docker-logo.png"));
-            operations.insert(new Image("2", "l-r-Flux"));
-            operations.insert(new Image("3", "l-r-Mono"));
+            operations.insert(new Image("1", "docker-logo.jpeg"));
+            operations.insert(new Image("2", "l-r-Flux.png"));
+            operations.insert(new Image("3", "l-r-Mono.jpg"));
         };
     }
 }

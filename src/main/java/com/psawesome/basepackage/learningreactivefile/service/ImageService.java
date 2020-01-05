@@ -37,7 +37,7 @@ public class ImageService {
     private final ImageRepository imageRepository;
 
     public Flux<Image> findAllImages() {
-        return imageRepository.findAll();
+        return imageRepository.findAll().log("findAll");
     }
 
     public Mono<Resource> findOneImage(String filename) {
@@ -90,10 +90,10 @@ public class ImageService {
 
             Files.createDirectory(Paths.get(UPLOAD_ROOT));
 
-            FileCopyUtils.copy("Test file", new FileWriter(UPLOAD_ROOT + "/docker-logo.png"));
+            FileCopyUtils.copy("Test file", new FileWriter(UPLOAD_ROOT + "/docker-logo.jpeg"));
 
-            FileCopyUtils.copy("Test file2", new FileWriter(UPLOAD_ROOT + "/l-r-Flux.png"));
-            FileCopyUtils.copy("Test file3", new FileWriter(UPLOAD_ROOT + "/l-r-Mono.png"));
+            FileCopyUtils.copy("Test file2", new FileWriter(UPLOAD_ROOT + "/l-r-Flux.jpg"));
+            FileCopyUtils.copy("Test file3", new FileWriter(UPLOAD_ROOT + "/l-r-Mono.jpeg"));
         };
     }
 }
