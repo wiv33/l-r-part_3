@@ -89,7 +89,7 @@ class ImageServiceTest {
         Flux<String> stringFlux = listFlux.flatMap(image -> Mono.just(image.getName()));
 
         assertAll(
-            () -> assertThat(listFlux.toIterable()).hasSize(2),
+            () -> assertThat(listFlux.toIterable()).hasSize(3),
             () -> assertTrue(stringFlux.any(string -> string.equals("docker-logo.png")).block(Duration.ofSeconds(10))),
             () -> assertTrue(stringFlux.any(string -> string.equals("l-r-Flux.png")).block(Duration.ofSeconds(10))),
             () -> assertTrue(stringFlux.any(string -> string.equals("l-r-Mono.png")).block(Duration.ofSeconds(10)))
