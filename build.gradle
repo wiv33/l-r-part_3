@@ -31,7 +31,7 @@ dependencies {
 //    compile 'org.springframework.boot:spring-boot-starter-jetty'
 //    compile 'org.springframework.boot:spring-boot-starter-tomcat'
 
-//    compile ('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
+    testImplementation ('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
     compile 'org.synchronoss.cloud:nio-multipart-parser:1.1.0'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
