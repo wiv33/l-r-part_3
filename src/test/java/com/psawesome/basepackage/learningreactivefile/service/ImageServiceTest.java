@@ -90,9 +90,9 @@ class ImageServiceTest {
 
         assertAll(
             () -> assertThat(listFlux.toIterable()).hasSize(3),
-            () -> assertTrue(stringFlux.any(string -> string.equals("docker-logo.png")).block(Duration.ofSeconds(10))),
-            () -> assertTrue(stringFlux.any(string -> string.equals("l-r-Flux.png")).block(Duration.ofSeconds(10))),
-            () -> assertTrue(stringFlux.any(string -> string.equals("l-r-Mono.png")).block(Duration.ofSeconds(10)))
+            () -> assertTrue(stringFlux.any(string -> string.equals("docker-logo.jpeg")).block(Duration.ofSeconds(10))),
+            () -> assertTrue(stringFlux.any(string -> string.equals("l-r-Flux.jpg")).block(Duration.ofSeconds(10))),
+            () -> assertTrue(stringFlux.any(string -> string.equals("l-r-Mono.jpeg")).block(Duration.ofSeconds(10)))
         );
     }
 
