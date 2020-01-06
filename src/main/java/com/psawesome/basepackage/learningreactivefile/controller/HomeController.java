@@ -39,7 +39,7 @@ public class HomeController {
                                 .body(new InputStreamResource(resource.getInputStream()));
                     } catch (IOException e) {
                         return ResponseEntity.badRequest()
-                                .body("couldn't find " + filename + " => " + e.getMessage());
+                                .body("Couldn't find " + filename + " => " + e.getMessage());
                     }
                 });
     }
