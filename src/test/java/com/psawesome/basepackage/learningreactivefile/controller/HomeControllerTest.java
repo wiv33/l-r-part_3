@@ -11,6 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -108,5 +109,20 @@ class HomeControllerTest {
         verifyNoMoreInteractions(service);
     }
 
+    @Test
+    void deleteImageShouldWork() {
+        given(service.deleteImage(any())).willReturn(Mono.empty());
+
+        client.delete().uri("/images/alpha.png")
+            .exchange()
+            .expectStatus()
+            .isSeeOther()
+            .expectHeader()
+            .valueEquals(HttpHeaders.LOCATION, "/");
+
+        verify(service).deleteImage("alpha.png");
+        verifyNoMoreInteractions(service);
+
+    }
 
 }
