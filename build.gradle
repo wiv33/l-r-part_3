@@ -40,8 +40,12 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
     testImplementation 'io.projectreactor:reactor-test'
+    compile('org.springframework.boot:spring-boot-devtools')
 
     testCompile("org.seleniumhq.selenium:selenium-java")
+
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+
 }
 
 test {

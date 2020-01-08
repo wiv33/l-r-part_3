@@ -59,6 +59,7 @@ public class HomeController {
     @GetMapping("/")
     public Mono<String> index(Model model) {
         model.addAttribute("images", imageService.findAllImages());
+        model.addAttribute("extra", "DevTools can also detect code changes too");
         return Mono.just("index");
     }
 }

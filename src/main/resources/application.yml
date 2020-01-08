@@ -1,0 +1,7 @@
+management:
+  endpoints:
+    enabled-by-default: true
+
+  endpoint:
+    health:
+      enabled: true

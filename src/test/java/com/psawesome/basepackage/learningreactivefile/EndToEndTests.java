@@ -1,3 +1,4 @@
+/*
 package com.psawesome.basepackage.learningreactivefile;
 
 
@@ -23,11 +24,13 @@ import java.nio.file.Paths;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.openqa.selenium.chrome.ChromeDriverService.createDefaultService;
 
+*/
 /**
  * package: com.psawesome.basepackage.learningreactivefile
  * author: PS
  * DATE: 2020-01-07 화요일 23:31
- */
+ *//*
+
 //@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class EndToEndTests {
@@ -90,3 +93,4 @@ public class EndToEndTests {
         );
     }
 }
+*/
